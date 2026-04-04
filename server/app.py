@@ -11,6 +11,8 @@ from env import StudyEnvironment
 random.seed(42)
 
 app = FastAPI()
+def main():
+    return app
 
 env = StudyEnvironment("medium")
 
