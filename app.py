@@ -1,73 +1,3 @@
-# from fastapi import FastAPI
-# from env import StudyEnvironment
-
-# app = FastAPI()
-
-# env = StudyEnvironment("medium")
-
-# @app.get("/")
-# def home():
-#     return {"message":"Study Planner Environment running"}
-
-# @app.get("/reset")
-# def reset():
-#     state = env.reset()
-#     return state
-
-# @app.get("/state")
-# def state():
-#     return env.state()
-
-# @app.get("/step/{action}")
-# def step(action:str):
-
-#     state,reward,done,score = env.step(action)
-
-#     return {
-#         "state":state,
-#         "reward":reward,
-#         "done":done,
-#         "score":score
-#     }
-
-# @app.get("/baseline")
-# def baseline():
-
-#     env.reset()
-
-#     done=False
-
-#     total_reward=0
-
-#     while not done:
-
-#         action="study"
-
-#         state,reward,done,score=env.step(action)
-
-#         total_reward+=reward
-
-#     return {
-#         "final_score":score,
-#         "total_reward":total_reward
-#     }
-
-# @app.get("/grader")
-# def grader():
-
-#     score = env.get_score()
-
-#     return {
-#         "grader_score": round(score,2),
-#         "status": "completed" if score >= 1 else "incomplete"
-#     }
-
-
-
-
-
-
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 import random
@@ -114,13 +44,14 @@ def home():
     return {"message":"AI Study Planner Environment running"}
 
 
+@app.post("/reset")
 @app.get("/reset")
 
 def reset():
 
     state = env.reset()
 
-    return Observation(**state)
+    return state
 
 
 @app.get("/state")
