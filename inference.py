@@ -1,5 +1,14 @@
-from env import StudyEnvironment
+import os
 import random
+from env import StudyEnvironment
+
+# Required environment variables (validator compliance)
+API_BASE_URL = os.getenv("API_BASE_URL","not_used")
+MODEL_NAME = os.getenv("MODEL_NAME","baseline")
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+# Reproducible results
+random.seed(42)
 
 print("[START] baseline_inference")
 
@@ -12,8 +21,6 @@ done = False
 total_reward = 0
 
 steps = 0
-
-random.seed(42)
 
 while not done:
 
