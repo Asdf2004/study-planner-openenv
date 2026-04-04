@@ -39,14 +39,14 @@ class StepResult(BaseModel):
     done:bool
 
     score:float
-app.get("/")
+@main.get("/")
 def home():
 
     return {"message":"AI Study Planner Environment running"}
 
 
-@app.post("/reset")
-@app.get("/reset")
+@main.post("/reset")
+@main.get("/reset")
 
 def reset():
 
@@ -55,16 +55,16 @@ def reset():
     return state
 
 
-@app.get("/state")
-@app.post("/state")
+@main.post("/state")
+@main.get("/state")
 
 def state():
 
     return Observation(**env.state())
 
 
-@app.get("/step/{action}")
-@app.post("/step/{action}")
+@main.post("/step/{action}")
+@main.get("/step/{action}")
 
 def step(action:str):
 
@@ -83,7 +83,7 @@ def step(action:str):
     )
 
 
-@app.get("/baseline")
+@main.get("/baseline")
 
 def baseline():
 
@@ -126,7 +126,7 @@ def baseline():
     }
 
 
-@app.get("/grader")
+@main.get("/grader")
 
 def grader():
 
@@ -141,7 +141,7 @@ def grader():
     }
 
 
-@app.get("/tasks")
+@main.get("/tasks")
 
 def tasks():
 
@@ -154,6 +154,7 @@ def tasks():
         "hard":{"target":100}
 
     }
+
 
 def main():
     return app
