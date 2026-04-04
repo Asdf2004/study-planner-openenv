@@ -54,6 +54,7 @@ def reset():
     return state
 
 
+@app.post("/state")
 @app.get("/state")
 
 def state():
@@ -61,6 +62,7 @@ def state():
     return Observation(**env.state())
 
 
+@app.post("/step/{action}")
 @app.get("/step/{action}")
 
 def step(action:str):
