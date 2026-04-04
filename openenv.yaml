@@ -1,25 +1,46 @@
 name: Study Planner Environment
 
-description: RL environment simulating study behavior
+description: Reinforcement learning environment simulating student study behavior and productivity optimization.
 
 version: 1.0
 
 author: Sanjeev Kumar
+
+license: MIT
 
 actions:
   - study
   - rest
   - scroll
 
-observation:
+observation_space:
   energy: int
   progress: float
   focus: int
   time: int
 
-reward: float
+reward:
+  type: float
+  range: [0.0,1.0]
 
 tasks:
-  easy: 30
-  medium: 60
-  hard: 100
+  - name: easy
+    target_progress: 30
+
+  - name: medium
+    target_progress: 60
+
+  - name: hard
+    target_progress: 100
+
+endpoints:
+  reset: /reset
+  step: /step/{action}
+  state: /state
+  baseline: /baseline
+  grader: /grader
+
+project:
+  name: study-planner-openenv
+  description: AI Study Planner RL Environment
+  homepage: https://huggingface.co/spaces/sanjeevku/study-planner-env
