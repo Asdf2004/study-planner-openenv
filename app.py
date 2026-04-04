@@ -7,7 +7,7 @@ from env import StudyEnvironment
 # Reproducible results
 random.seed(42)
 
-app = FastAPI()
+main = FastAPI()
 
 env = StudyEnvironment("medium")
 
@@ -38,7 +38,7 @@ class StepResult(BaseModel):
     score:float
 
 
-@app.get("/")
+@main.get("/")
 def home():
 
     return {"message":"AI Study Planner Environment running"}
