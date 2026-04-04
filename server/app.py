@@ -11,8 +11,6 @@ from env import StudyEnvironment
 random.seed(42)
 
 app = FastAPI()
-def main():
-    return app
 
 env = StudyEnvironment("medium")
 
@@ -20,97 +18,71 @@ env = StudyEnvironment("medium")
 # Typed models (OpenEnv requirement)
 
 class Observation(BaseModel):
-
     energy:int
-
     progress:float
-
     time:int
-
     focus:int
-
     actions:list
 
 
 class StepResult(BaseModel):
-
     state:dict
-
     reward:float
-
     done:bool
-
     score:float
-@main.get("/")
-def home():
 
+
+@app.get("/")
+def home():
     return {"message":"AI Study Planner Environment running"}
 
 
-@main.post("/reset")
-@main.get("/reset")
-
+@app.post("/reset")
+@app.get("/reset")
 def reset():
-
     state = env.reset()
-
     return state
 
 
-@main.post("/state")
-@main.get("/state")
-
+@app.get("/state")
+@app.post("/state")
 def state():
-
     return Observation(**env.state())
 
 
-@main.post("/step/{action}")
-@main.get("/step/{action}")
-
+@app.get("/step/{action}")
+@app.post("/step/{action}")
 def step(action:str):
-
     state,reward,done,score = env.step(action)
 
     return StepResult(
-
         state=state,
-
         reward=round(reward,2),
-
         done=done,
-
         score=round(score,2)
-
     )
 
 
-@main.get("/baseline")
-
+@app.get("/baseline")
 def baseline():
 
     env.reset()
 
     done=False
-
     total_reward=0
 
     while not done:
 
         if env.energy < 30:
-
             action="rest"
 
         elif env.focus < 25:
-
             action="rest"
 
         elif random.random() < 0.1:
-
             action="scroll"
 
         else:
-
             action="study"
 
         state,reward,done,score = env.step(action)
@@ -118,46 +90,34 @@ def baseline():
         total_reward += reward
 
     return {
-
         "baseline_score":round(score,2),
-
         "total_reward":round(total_reward,2),
-
         "steps":env.time
-
     }
 
 
-@main.get("/grader")
-
+@app.get("/grader")
 def grader():
 
     score = env.get_score()
 
     return {
-
         "grader_score":round(score,2),
-
         "passed": score >= 1.0
-
     }
 
 
-@main.get("/tasks")
-
+@app.get("/tasks")
 def tasks():
 
     return {
-
         "easy":{"target":30},
-
         "medium":{"target":60},
-
         "hard":{"target":100}
-
     }
 
 
+# OpenEnv required entry function
 def main():
     return app
 
