@@ -10,7 +10,7 @@ from env import StudyEnvironment
 
 random.seed(42)
 
-main = FastAPI()
+app = FastAPI()
 
 env = StudyEnvironment("medium")
 
@@ -39,14 +39,14 @@ class StepResult(BaseModel):
     done:bool
 
     score:float
-main.get("/")
+app.get("/")
 def home():
 
     return {"message":"AI Study Planner Environment running"}
 
 
-@main.post("/reset")
-@main.get("/reset")
+@app.post("/reset")
+@app.get("/reset")
 
 def reset():
 
@@ -55,16 +55,16 @@ def reset():
     return state
 
 
-@main.get("/state")
-@main.post("/state")
+@app.get("/state")
+@app.post("/state")
 
 def state():
 
     return Observation(**env.state())
 
 
-@main.get("/step/{action}")
-@main.post("/step/{action}")
+@app.get("/step/{action}")
+@app.post("/step/{action}")
 
 def step(action:str):
 
@@ -83,7 +83,7 @@ def step(action:str):
     )
 
 
-@main.get("/baseline")
+@app.get("/baseline")
 
 def baseline():
 
@@ -126,7 +126,7 @@ def baseline():
     }
 
 
-@main.get("/grader")
+@app.get("/grader")
 
 def grader():
 
@@ -141,7 +141,7 @@ def grader():
     }
 
 
-@main.get("/tasks")
+@app.get("/tasks")
 
 def tasks():
 
