@@ -1,0 +1,17 @@
+[project]
+name = "study-planner-openenv"
+version = "1.0.0"
+description = "AI Study Planner RL Environment"
+authors = [
+    {name = "Sanjeev Kumar"}
+]
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "pyyaml"
+]
+
+[tool.openenv]
+env = "env.py"
