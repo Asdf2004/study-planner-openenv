@@ -1,0 +1,25 @@
+name: Study Planner Environment
+
+description: RL environment simulating study behavior
+
+version: 1.0
+
+author: Sanjeev Kumar
+
+actions:
+  - study
+  - rest
+  - scroll
+
+observation:
+  energy: int
+  progress: float
+  focus: int
+  time: int
+
+reward: float
+
+tasks:
+  easy: 30
+  medium: 60
+  hard: 100
