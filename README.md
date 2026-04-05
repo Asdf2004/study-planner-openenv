@@ -1,120 +1,74 @@
 # AI Study Planner Environment
 
-## Project Overview
+This project implements an AI Study Planner Environment using FastAPI and OpenEnv specification. The environment simulates student study behavior including energy, focus, time management and productivity.
 
-This project implements a Reinforcement Learning environment that simulates a student's study planning behaviour. The agent must manage energy, focus, and time efficiently to maximize study progress.
+## Deployment
 
-The goal is to complete study targets while maintaining good energy levels and making optimal decisions.
-
-## Environment Design
-
-The environment follows a standard RL structure:
-
-- reset() → initializes the environment
-- step(action) → performs an action
-- state() → returns current state
-- get_score() → returns normalized score (0–1)
-
-## Action Space
-
-The agent can take the following actions:
-
-- study → increases progress but reduces energy and focus
-- rest → restores energy and focus
-- scroll → wastes time and reduces energy
-
-## Observation Space
-
-The environment returns:
-
-- energy → student energy level (0–100)
-- progress → study completion progress
-- time → steps taken
-- focus → concentration level
-- actions → available actions
-
-## Reward Design
-
-Reward is designed to encourage productive behaviour:
-
-- Study action → +1 reward
-- Rest action → +0.5 reward
-- Scroll action → -1 reward
-- Invalid action → -2 penalty
-- Task completion → +5 bonus
-- Energy depletion → penalty
-- Random distraction penalty
-
-## Tasks
-
-The environment supports three difficulty levels:
-
-Easy → target progress 30  
-Medium → target progress 60  
-Hard → target progress 100  
-
-## Episode Termination
-
-Episode ends when:
-
-- Target progress achieved
-- Energy becomes zero
-- Maximum steps reached
-
-## Scoring System
-
-Final score is normalized:
-
-score = progress / target
-
-Score range:
-0.0 → no progress  
-1.0 → task completed  
-
-## How to Run
-
-Run the baseline agent:
-
-python agent.py
+This environment is deployed using Docker on HuggingFace Spaces.
 
 ## Project Structure
 
 study_env/
-│
-├── env.py
-├── agent.py
-├── tasks.py
-├── openenv.yaml
-├── README.md
-├── requirements.txt
 
-## Requirements
-
-Python 3.8+
-
-## Future Improvements
-
-Possible improvements:
-
-- Multi subject scheduling
-- Fatigue modeling
-- Random life events
-- Adaptive rewards
-- Multi-agent scheduling
-
+│── server/
+│    └── app.py          # FastAPI server
+│── Dockerfile
+│── README.md
+│── agent.py             # Agent logic
+│── env.py               # Environment logic
+│── inference.py         # Baseline inference
+│── openenv.yaml         # OpenEnv configuration
+│── pyproject.toml
+│── requirements.txt
+│── tasks.py             # Task definitions
+│── uv.lock
 
 ## API Endpoints
 
-/reset → reset environment
+### Reset Environment
+POST /reset  
+GET /reset  
 
-/state → current state
+Resets the study environment.
 
-/baseline → baseline agent score
+### Get State
+GET /state  
+POST /state  
 
-/grader → grader score
+Returns current environment state.
 
+### Take Action
+GET /step/{action}  
+POST /step/{action}
 
+Actions:
+- study
+- rest
+- scroll
+
+### Baseline Agent
+GET /baseline
+
+Runs baseline agent simulation.
+
+### Grader
+GET /grader
+
+Returns environment score.
+
+### Tasks
+GET /tasks
+
+Returns difficulty targets.
 
 ## Author
 
 Sanjeev Kumar Bind
+
+## Tech Stack
+
+- Python
+- FastAPI
+- OpenEnv
+- Docker
+- HuggingFace Spaces
