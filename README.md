@@ -9,19 +9,19 @@ This environment is deployed using Docker on HuggingFace Spaces.
 ## Project Structure
 
 study_env/
-
 │── server/
 │    └── app.py          # FastAPI server
-│── Dockerfile
-│── README.md
 │── agent.py             # Agent logic
+│── Dockerfile
 │── env.py               # Environment logic
 │── inference.py         # Baseline inference
 │── openenv.yaml         # OpenEnv configuration
 │── pyproject.toml
+│── README.md
 │── requirements.txt
 │── tasks.py             # Task definitions
 │── uv.lock
+
 
 ## API Endpoints
 
