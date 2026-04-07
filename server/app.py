@@ -95,25 +95,49 @@ def baseline():
         "steps":env.time
     }
 
+@main.get("/tasks")
 
-@app.get("/grader")
-def grader():
-
-    score = env.get_score()
-
-    return {
-        "grader_score":round(score,2),
-        "passed": score >= 1.0
-    }
-
-
-@app.get("/tasks")
 def tasks():
 
     return {
+
         "easy":{"target":30},
+
         "medium":{"target":60},
-        "hard":{"target":100}
+
+        "hard":{"target":90}
+
+    }
+
+
+@main.get("/grader")
+
+def grader():
+
+    progress = env.get_score()
+
+    easy = progress/30
+    medium = progress/60
+    hard = progress/90
+
+    def fix(x):
+
+        if x <= 0:
+            return 0.01
+
+        if x >= 1:
+            return 0.99
+
+        return float(round(x,3))
+
+    return {
+
+        "easy":fix(easy),
+
+        "medium":fix(medium),
+
+        "hard":fix(hard)
+
     }
 
 
