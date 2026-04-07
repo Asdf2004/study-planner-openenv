@@ -9,14 +9,11 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from env import StudyEnvironment
 from tasks import tasks
 
-random.seed(42)
 
 app = FastAPI()
 
 env = StudyEnvironment("medium")
 
-
-# Typed models (OpenEnv requirement)
 
 class Observation(BaseModel):
 
@@ -39,21 +36,18 @@ class StepResult(BaseModel):
 
 def home():
 
-    return {"message":"AI Study Planner Environment running"}
+    return {"message":"AI Study Planner running"}
 
 
-@app.post("/reset")
 @app.get("/reset")
+@app.post("/reset")
 
 def reset():
 
-    state = env.reset()
-
-    return state
+    return env.reset()
 
 
 @app.get("/state")
-@app.post("/state")
 
 def state():
 
@@ -61,11 +55,10 @@ def state():
 
 
 @app.get("/step/{action}")
-@app.post("/step/{action}")
 
 def step(action:str):
 
-    state,reward,done,score = env.step(action)
+    state,reward,done,score=env.step(action)
 
     return StepResult(
 
@@ -87,66 +80,27 @@ def get_tasks():
     return tasks()
 
 
-@app.get("/baseline")
-
-def baseline():
-
-    env.reset()
-
-    done=False
-
-    total_reward=0
-
-    while not done:
-
-        if env.energy < 30:
-
-            action="rest"
-
-        elif env.focus < 25:
-
-            action="rest"
-
-        elif random.random() < 0.1:
-
-            action="scroll"
-
-        else:
-
-            action="study"
-
-        state,reward,done,score = env.step(action)
-
-        total_reward += reward
-
-    return {
-
-        "baseline_score":round(score,2),
-
-        "total_reward":round(total_reward,2),
-
-        "steps":env.time
-
-    }
-
-
 @app.get("/grader")
 
 def grader():
 
-    progress = env.get_score()
+    progress=env.get_score()
 
-    easy = progress/30
-    medium = progress/60
-    hard = progress/90
+    easy=progress/30
+
+    medium=progress/60
+
+    hard=progress/90
 
 
     def fix(x):
 
-        if x <= 0:
+        if x<=0:
+
             return 0.01
 
-        if x >= 1:
+        if x>=1:
+
             return 0.99
 
         return float(round(x,3))
@@ -168,6 +122,6 @@ def main():
     return app
 
 
-if __name__ == "__main__":
+if __name__=="__main__":
 
     main()
