@@ -1,4 +1,4 @@
-def get_tasks():
+def tasks():
 
     return {
 
