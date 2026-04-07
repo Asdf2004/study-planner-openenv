@@ -4,7 +4,6 @@ from env import StudyEnvironment
 
 print("[START] LLM agent")
 
-# Safe environment variables
 API_BASE_URL = os.getenv("API_BASE_URL")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME","gpt-3.5-turbo")
@@ -47,7 +46,6 @@ while not done:
 
     action = "study"
 
-    # LLM decision (validator requirement)
     if client and API_BASE_URL and API_KEY:
 
         try:
@@ -77,7 +75,6 @@ while not done:
 
             action = "study"
 
-    # Environment step
     try:
 
         state,reward,done,score = env.step(action)
