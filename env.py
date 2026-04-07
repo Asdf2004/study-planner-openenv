@@ -1,15 +1,15 @@
-from tasks import tasks
 import random
+
+from tasks import tasks
+
 
 class StudyEnvironment:
 
     def __init__(self,difficulty="medium"):
 
-        self.max_energy = 100
+        self.difficulty=difficulty
 
-        self.target = tasks[difficulty]["target"]
-
-        self.actions=["study","rest","scroll"]
+        self.target = tasks()[difficulty]["target"]
 
         self.reset()
 
@@ -18,30 +18,30 @@ class StudyEnvironment:
 
         self.energy=100
 
+        self.focus=100
+
         self.progress=0
 
         self.time=0
 
-        self.focus=50
-
-        self.history=[]
+        self.done=False
 
         return self.state()
 
 
     def state(self):
 
-        return{
+        return {
 
             "energy":self.energy,
 
-            "progress":round(self.progress,2),
+            "progress":self.progress,
 
             "time":self.time,
 
             "focus":self.focus,
 
-            "actions":self.actions
+            "actions":["study","rest","scroll"]
 
         }
 
@@ -52,75 +52,59 @@ class StudyEnvironment:
 
         if action=="study":
 
-            self.progress+=10 + self.focus*0.05
+            if self.energy>10 and self.focus>10:
 
-            self.focus-=2
+                gain=random.randint(5,10)
 
-            self.energy-=10
+                self.progress+=gain
 
-            reward=1
+                self.energy-=10
+
+                self.focus-=8
+
+                reward=gain/10
+
+            else:
+
+                reward=-0.2
 
 
         elif action=="rest":
 
             self.energy+=15
 
-            self.focus+=3
+            self.focus+=10
 
-            reward=0.5
+            reward=0.1
 
 
         elif action=="scroll":
 
-            self.energy-=5
-
-            reward=-1
-
-
-        else:
-
-            reward=-2
-
-
-        if random.random()<0.1:
+            self.focus-=15
 
             self.energy-=5
 
-            reward-=0.5
+            reward=-0.3
 
 
         self.energy=max(0,min(100,self.energy))
 
         self.focus=max(0,min(100,self.focus))
 
-        self.progress=max(0,min(self.target,self.progress))
+        self.progress=max(0,self.progress)
+
 
         self.time+=1
 
 
-        done=False
-
-
         if self.progress>=self.target:
 
-            done=True
-
-            reward+=5
+            self.done=True
 
 
-        if self.energy<=0:
-
-            done=True
-
-            reward-=2
-
-
-        score=min(1.0,self.progress/self.target)
-
-
-        return self.state(),reward,done,score
+        return self.state(),reward,self.done,self.get_score()
 
 
     def get_score(self):
 
-        return min(1.0,self.progress/self.target)
+        return self.progress
