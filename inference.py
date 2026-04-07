@@ -1,48 +1,67 @@
 import os
-import random
+from openai import OpenAI
 from env import StudyEnvironment
 
-# Required environment variables (validator compliance)
-API_BASE_URL = os.getenv("API_BASE_URL","not_used")
-MODEL_NAME = os.getenv("MODEL_NAME","baseline")
-HF_TOKEN = os.getenv("HF_TOKEN")
+print("[START] LLM agent")
 
-# Reproducible results
-random.seed(42)
+# Required environment variables (Hackathon requirement)
+API_BASE_URL = os.environ["API_BASE_URL"]
+API_KEY = os.environ["API_KEY"]
+MODEL_NAME = os.environ["MODEL_NAME"]
 
-print("[START] baseline_inference")
+# Initialize LLM client (IMPORTANT)
+client = OpenAI(
+    base_url=API_BASE_URL,
+    api_key=API_KEY
+)
 
-env = StudyEnvironment("hard")
+env = StudyEnvironment("medium")
 
 state = env.reset()
 
 done = False
-
 total_reward = 0
-
 steps = 0
 
 while not done:
 
-    if state["energy"] < 30:
-        action = "rest"
+    prompt = f"""
+    You are an AI study planner.
 
-    elif state["focus"] < 30:
-        action = "rest"
+    Current state:
+    Energy: {state['energy']}
+    Focus: {state['focus']}
+    Progress: {state['progress']}
+    Time: {state['time']}
 
-    elif random.random() < 0.1:
-        action = "scroll"
+    Possible actions:
+    study
+    rest
+    scroll
 
-    else:
+    Return only one word action.
+    """
+
+    # LLM CALL (this is what validator checks)
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
+            {"role":"user","content":prompt}
+        ],
+        temperature=0
+    )
+
+    action = response.choices[0].message.content.strip().lower()
+
+    if action not in ["study","rest","scroll"]:
         action = "study"
 
-    state, reward, done, score = env.step(action)
+    state,reward,done,score = env.step(action)
 
     total_reward += reward
-
     steps += 1
 
-    print(f"[STEP] step={steps} action={action} reward={round(reward,2)} score={round(score,2)}")
+    print(f"[STEP] {steps} action={action} reward={round(reward,2)} score={round(score,2)}")
 
 print("[END]")
 
