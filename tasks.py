@@ -1,9 +1,20 @@
-tasks={
+def get_tasks():
 
-"easy":{"target":30},
+    return {
 
-"medium":{"target":60},
+        "easy":{
+            "description":"Reach 30 progress",
+            "target":30
+        },
 
-"hard":{"target":100}
+        "medium":{
+            "description":"Reach 60 progress",
+            "target":60
+        },
 
-}
+        "hard":{
+            "description":"Reach 90 progress",
+            "target":90
+        }
+
+    }
