@@ -8,7 +8,6 @@ API_BASE_URL = os.getenv("API_BASE_URL")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME","gpt-3.5-turbo")
 
-# Initialize client safely
 try:
     client = OpenAI(
         base_url=API_BASE_URL,
