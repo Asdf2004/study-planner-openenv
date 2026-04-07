@@ -1,5 +1,5 @@
-fastapi
-uvicorn
-pyyaml
-pydantic
 openai
+fastapi
+pydantic
+pyyaml
+openenv-core>=0.2.6
