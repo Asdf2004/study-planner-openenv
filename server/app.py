@@ -95,7 +95,7 @@ def baseline():
         "steps":env.time
     }
 
-@main.get("/tasks")
+@app.main.get("/tasks")
 
 def tasks():
 
@@ -110,7 +110,7 @@ def tasks():
     }
 
 
-@main.get("/grader")
+@app.main.get("/grader")
 
 def grader():
 
