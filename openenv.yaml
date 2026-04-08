@@ -13,7 +13,7 @@ actions:
   - rest
   - scroll
 
-observation_space:
+observation:
   energy: int
   progress: float
   focus: int
@@ -21,17 +21,20 @@ observation_space:
 
 reward:
   type: float
-  range: [0.0,1.0]
+  range: [-10.0,10.0]
 
 tasks:
   - name: easy
-    target_progress: 30
+    target: 30
+    difficulty: easy
 
   - name: medium
-    target_progress: 60
+    target: 60
+    difficulty: medium
 
   - name: hard
-    target_progress: 100
+    target: 100
+    difficulty: hard
 
 endpoints:
   reset: /reset
