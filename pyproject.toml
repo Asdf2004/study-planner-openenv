@@ -11,11 +11,12 @@ dependencies = [
     "uvicorn",
     "pydantic",
     "pyyaml",
-    "openenv-core>=0.2.0"
+    "openenv-core==0.2.3",
+    "openai>=2.7.2"
 ]
 
 [project.scripts]
-server = "server.app:main"
+server = "server.app:app"
 
 [tool.openenv]
 env = "env.py"
