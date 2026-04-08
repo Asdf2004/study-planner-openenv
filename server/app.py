@@ -102,6 +102,7 @@ def baseline():
     return results
 
 
+app = FastAPI()
 def main():
     return app
 
