@@ -1,3 +1,16 @@
+---
+title: Study Planner Env
+emoji: 📘
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_file: agent.py
+python_version: "3.13.3"
+pinned: false
+license: mit
+---
+
+
 # AI Study Planner Environment
 
 AI Study Planner is a reinforcement learning environment that simulates real student study behavior including energy, focus, productivity and time management.
