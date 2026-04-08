@@ -4,8 +4,7 @@ emoji: 📘
 colorFrom: blue
 colorTo: purple
 sdk: docker
-app_file: agent.py
-python_version: "3.13.3"
+python_version: "3.10"
 pinned: false
 license: mit
 ---
