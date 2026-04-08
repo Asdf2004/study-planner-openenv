@@ -11,8 +11,7 @@ dependencies = [
     "uvicorn",
     "pydantic",
     "pyyaml",
-    "openenv-core==0.2.3",
-    "openai>=2.30.0"
+    "openenv-core"
 ]
 
 [project.scripts]
