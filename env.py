@@ -105,6 +105,14 @@ class StudyEnvironment:
         return self.state(),reward,self.done,self.get_score()
 
 
-    def get_score(self):
+   def get_score(self):
 
-        return self.progress
+        raw_score = self.progress/self.target
+    
+        if raw_score <= 0:
+            return 0.01
+    
+        if raw_score >= 1:
+            return 0.99
+    
+        return raw_score
