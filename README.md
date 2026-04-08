@@ -1,74 +1,98 @@
 # AI Study Planner Environment
 
-This project implements an AI Study Planner Environment using FastAPI and OpenEnv specification. The environment simulates student study behavior including energy, focus, time management and productivity.
+AI Study Planner is a reinforcement learning environment that simulates real student study behavior including energy, focus, productivity and time management.
 
-## Deployment
+The goal of the agent is to maximize study progress while managing limited energy and focus resources.
 
-This environment is deployed using Docker on HuggingFace Spaces.
+## Environment Design
 
-## Project Structure
+The environment models realistic student productivity patterns where:
 
-study_env/
-│── server/
-│    └── app.py          # FastAPI server
-│── agent.py             # Agent logic
-│── Dockerfile
-│── env.py               # Environment logic
-│── inference.py         # Baseline inference
-│── openenv.yaml         # OpenEnv configuration
-│── pyproject.toml
-│── README.md
-│── requirements.txt
-│── tasks.py             # Task definitions
-│── uv.lock
+• Studying increases progress but consumes energy  
+• Resting restores energy and focus  
+• Scrolling wastes time and reduces focus  
 
+The episode ends when:
+• Target progress is achieved
+• Energy reaches zero
+• Maximum steps reached
+
+## Action Space
+
+The agent can take 3 actions:
+
+study → increase progress, reduce energy  
+rest → increase energy and focus  
+scroll → waste time, reduce focus  
+
+## Observation Space
+
+Environment state contains:
+
+energy → remaining energy (0–100)  
+progress → task completion progress  
+focus → attention level (0–100)  
+time → steps taken  
+actions → available actions  
+
+## Tasks
+
+Three tasks with increasing difficulty:
+
+Easy → Target progress 30  
+Medium → Target progress 60  
+Hard → Target progress 100  
+
+Each task has a grader producing scores between 0.01 and 0.99.
+
+## Reward Design
+
+Reward is shaped to guide learning:
+
++ reward for study progress  
++ small reward for rest  
+- penalty for scrolling  
+- penalty for invalid actions  
 
 ## API Endpoints
 
-### Reset Environment
-POST /reset  
-GET /reset  
+/reset → reset environment  
+/state → get current state  
+/step/{action} → perform action  
+/baseline → run baseline agent  
+/grader → get task score  
+/tasks → list tasks  
 
-Resets the study environment.
+## How to Run
 
-### Get State
-GET /state  
-POST /state  
+Install dependencies:
 
-Returns current environment state.
+pip install -r requirements.txt
 
-### Take Action
-GET /step/{action}  
-POST /step/{action}
+Run server:
 
-Actions:
-- study
-- rest
-- scroll
+uvicorn server.app:app --host 0.0.0.0 --port 7860
 
-### Baseline Agent
-GET /baseline
+## Baseline Results
 
-Runs baseline agent simulation.
+Example baseline performance:
 
-### Grader
-GET /grader
+Score ≈ 0.85  
+Steps ≈ 12–18  
+Reward ≈ positive cumulative reward  
 
-Returns environment score.
+## Deployment
 
-### Tasks
-GET /tasks
+Deployed using Docker on HuggingFace Spaces.
 
-Returns difficulty targets.
+## Tech Stack
+
+Python  
+FastAPI  
+OpenEnv  
+Docker  
+HuggingFace Spaces  
 
 ## Author
 
 Sanjeev Kumar Bind
-
-## Tech Stack
-
-- Python
-- FastAPI
-- OpenEnv
-- Docker
-- HuggingFace Spaces
