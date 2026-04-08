@@ -2,6 +2,8 @@ import os
 from openai import OpenAI
 from env import StudyEnvironment
 
+print("[START]")
+
 API_BASE_URL = os.getenv("API_BASE_URL")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME","gpt-3.5-turbo")
@@ -45,30 +47,27 @@ while not done:
         try:
 
             prompt=f"""
-            Energy {state['energy']}
-            Focus {state['focus']}
-            Progress {state['progress']}
+Energy {state['energy']}
+Focus {state['focus']}
+Progress {state['progress']}
 
-            Choose:
-            study
-            rest
-            scroll
+Choose:
+study
+rest
+scroll
 
-            Return one word.
-            """
+Return one word.
+"""
 
             response = client.chat.completions.create(
 
                 model=MODEL_NAME,
 
                 messages=[
-
                     {"role":"user","content":prompt}
-
                 ],
 
                 temperature=0,
-
                 max_tokens=5
 
             )
@@ -83,20 +82,28 @@ while not done:
 
             action="study"
 
-    try:
 
-        state,reward,done,score=env.step(action)
+    state,reward,done,score=env.step(action)
 
-        total_reward+=reward
+    total_reward+=reward
 
-        steps+=1
+    steps+=1
 
-    except:
-
-        break
+    print(f"[STEP] step={steps} action={action} reward={round(reward,2)} score={round(score,2)}")
 
 
-print("final_score:",round(env.get_score(),2))
+print("[END]")
+
+final_score = env.get_score()
+
+if final_score <=0:
+    final_score=0.01
+
+if final_score >=1:
+    final_score=0.99
+
+
+print("final_score:",round(final_score,2))
 
 print("total_reward:",round(total_reward,2))
 
