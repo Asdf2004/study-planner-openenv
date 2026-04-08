@@ -3,8 +3,6 @@ from openai import OpenAI
 from env import StudyEnvironment
 from tasks import tasks
 
-print("[START]")
-
 API_BASE_URL = os.getenv("API_BASE_URL")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
@@ -17,8 +15,9 @@ if API_BASE_URL and API_KEY:
         client = None
 
 for task_name, task_config in tasks.items():
-    print(f"\n[TASK] {task_name}")
-    
+    print("[START]")
+    print(f"task={task_name}")
+
     env = StudyEnvironment(task_name)
     state = env.reset()
     done = False
@@ -52,9 +51,8 @@ Return one word."""
         steps += 1
         print(f"[STEP] step={steps} action={action} reward={round(reward,2)} score={round(score,2)}")
 
+    final_score = max(0.01, min(0.99, env.get_score()))
+    print(f"final_score: {round(final_score, 2)}")
+    print(f"total_reward: {round(total_reward, 2)}")
+    print(f"steps: {steps}")
     print("[END]")
-    final_score = env.get_score()
-    final_score = max(0.01, min(0.99, final_score))
-    print("final_score:", round(final_score, 2))
-    print("total_reward:", round(total_reward, 2))
-    print("steps:", steps)
