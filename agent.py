@@ -4,7 +4,6 @@ from env import StudyEnvironment
 # reproducible baseline
 random.seed(42)
 
-# difficulty (easy / medium / hard)
 env = StudyEnvironment("hard")
 
 state = env.reset()
@@ -18,7 +17,6 @@ print("---------------------")
 
 while not done:
 
-    # baseline decision policy
     if state["energy"] < 35:
 
         action = "rest"
@@ -38,7 +36,7 @@ while not done:
 
     print("Action taken:", action)
 
-    state, reward, done, info = env.step(action)
+    state, reward, done, score = env.step(action)
 
     total_reward += reward
 
@@ -47,7 +45,7 @@ while not done:
 
     print("Reward:", reward)
 
-    print("Score:", round(info["score"],2))
+    print("Score:", round(score,2))
 
     print("---------------------")
 
