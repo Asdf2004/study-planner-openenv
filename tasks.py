@@ -1,20 +1,16 @@
-def tasks():
+tasks = {
+    "easy": {
+        "target": 30,
+        "grader": lambda score: min(max(score/30,0.01),0.99)
+    },
 
-    return {
+    "medium": {
+        "target": 60,
+        "grader": lambda score: min(max(score/60,0.01),0.99)
+    },
 
-        "easy":{
-            "description":"Reach 30 progress",
-            "target":30
-        },
-
-        "medium":{
-            "description":"Reach 60 progress",
-            "target":60
-        },
-
-        "hard":{
-            "description":"Reach 90 progress",
-            "target":90
-        }
-
+    "hard": {
+        "target": 100,
+        "grader": lambda score: min(max(score/100,0.01),0.99)
     }
+}
