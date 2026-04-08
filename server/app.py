@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import random
 import sys
 import os
 
@@ -63,11 +62,8 @@ def step(action:str):
     return StepResult(
 
         state=state,
-
         reward=round(reward,2),
-
         done=done,
-
         score=round(score,2)
 
     )
@@ -77,42 +73,25 @@ def step(action:str):
 
 def get_tasks():
 
-    return tasks()
+    return tasks
 
 
 @app.get("/grader")
 
 def grader():
 
-    progress=env.get_score()
+    score = env.get_score()
 
-    easy=progress/30
+    if score <= 0:
+        score = 0.01
 
-    medium=progress/60
-
-    hard=progress/90
-
-
-    def fix(x):
-
-        if x<=0:
-
-            return 0.01
-
-        if x>=1:
-
-            return 0.99
-
-        return float(round(x,3))
-
+    if score >= 1:
+        score = 0.99
 
     return {
 
-        "easy":fix(easy),
-
-        "medium":fix(medium),
-
-        "hard":fix(hard)
+        "grader_score":round(score,2),
+        "passed": score > 0
 
     }
 
