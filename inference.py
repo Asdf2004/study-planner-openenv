@@ -1,4 +1,5 @@
 import os
+import signal
 from openai import OpenAI
 from env import StudyEnvironment
 from tasks import tasks
@@ -10,9 +11,15 @@ MODEL_NAME = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
 client = None
 if API_BASE_URL and API_KEY:
     try:
-        client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
+        client = OpenAI(
+            base_url=API_BASE_URL,
+            api_key=API_KEY,
+            timeout=5.0  # 5 second timeout
+        )
     except:
         client = None
+
+MAX_STEPS = 50  # max steps per task
 
 for task_name, task_config in tasks.items():
     print("[START]")
@@ -24,7 +31,7 @@ for task_name, task_config in tasks.items():
     total_reward = 0
     steps = 0
 
-    while not done:
+    while not done and steps < MAX_STEPS:
         action = "study"
         if client:
             try:
@@ -44,7 +51,7 @@ Return one word."""
                 if action not in ["study", "rest", "scroll"]:
                     action = "study"
             except:
-                action = "study"
+                action = "study"  # timeout ya error pe fallback
 
         state, reward, done, score = env.step(action)
         total_reward += reward
