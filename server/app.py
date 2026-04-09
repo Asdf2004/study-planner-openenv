@@ -111,7 +111,7 @@ def grader():
         }
     return results
 
-# ENTRYPOINT REQUIRED BY OPENENV
+
 def main():
     return app
 
