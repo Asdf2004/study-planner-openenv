@@ -89,17 +89,14 @@ def grader():
     random.seed(42)
     results = {}
     for task_name in tasks:
+        # Fresh environment har baar
         env = StudyEnvironment(task_name)
         state = env.reset()
         done = False
         steps = 0
-        while not done and steps < 50:
-            if state["energy"] < 35:
+        while not done and steps < 200:
+            if state["energy"] <= 10 or state["focus"] <= 10:
                 action = "rest"
-            elif state["focus"] < 25:
-                action = "rest"
-            elif random.random() < 0.15:
-                action = "scroll"
             else:
                 action = "study"
             state, reward, done, score = env.step(action)
@@ -110,7 +107,6 @@ def grader():
             "passed": True
         }
     return results
-
 
 def main():
     return app
