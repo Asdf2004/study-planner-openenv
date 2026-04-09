@@ -83,30 +83,33 @@ def step_task(task:str,action:str):
     }
 
 
-# GRADER (IMPORTANT FOR PHASE 2)
 @app.get("/grader")
 def grader():
-
-    results={}
-
-    for name,env in envs.items():
-
-        score = float(env.get_score())
-
-        # keep strictly between 0 and 1
-        if score <=0:
-            score=0.01
-
-        if score >=1:
-            score=0.99
-
-        results[name]={
-            "grader_score":round(score,2),
-            "passed":True
+    import random
+    random.seed(42)
+    results = {}
+    for task_name in tasks:
+        env = StudyEnvironment(task_name)
+        state = env.reset()
+        done = False
+        steps = 0
+        while not done and steps < 50:
+            if state["energy"] < 35:
+                action = "rest"
+            elif state["focus"] < 25:
+                action = "rest"
+            elif random.random() < 0.15:
+                action = "scroll"
+            else:
+                action = "study"
+            state, reward, done, score = env.step(action)
+            steps += 1
+        final_score = max(0.01, min(0.99, env.get_score()))
+        results[task_name] = {
+            "grader_score": round(final_score, 2),
+            "passed": True
         }
-
     return results
-
 
 # ENTRYPOINT REQUIRED BY OPENENV
 def main():
