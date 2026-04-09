@@ -1,25 +1,20 @@
 import os
-import signal
 from openai import OpenAI
 from env import StudyEnvironment
 from tasks import tasks
 
-API_BASE_URL = os.getenv("API_BASE_URL")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
 API_KEY = os.getenv("API_KEY")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-3.5-turbo")
 
 client = None
 if API_BASE_URL and API_KEY:
     try:
-        client = OpenAI(
-            base_url=API_BASE_URL,
-            api_key=API_KEY,
-            timeout=5.0  # 5 second timeout
-        )
+        client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY, timeout=5.0)
     except:
         client = None
 
-MAX_STEPS = 50  # max steps per task
+MAX_STEPS = 200
 
 for task_name, task_config in tasks.items():
     print("[START]")
@@ -32,7 +27,12 @@ for task_name, task_config in tasks.items():
     steps = 0
 
     while not done and steps < MAX_STEPS:
-        action = "study"
+        # Smart default — energy/focus check
+        if state["energy"] <= 10 or state["focus"] <= 10:
+            action = "rest"
+        else:
+            action = "study"
+
         if client:
             try:
                 prompt = f"""Energy {state['energy']}
@@ -47,11 +47,11 @@ Return one word."""
                     temperature=0,
                     max_tokens=5
                 )
-                action = response.choices[0].message.content.strip().lower()
-                if action not in ["study", "rest", "scroll"]:
-                    action = "study"
+                a = response.choices[0].message.content.strip().lower()
+                if a in ["study", "rest", "scroll"]:
+                    action = a
             except:
-                action = "study"  # timeout ya error pe fallback
+                pass
 
         state, reward, done, score = env.step(action)
         total_reward += reward
