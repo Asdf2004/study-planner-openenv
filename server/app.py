@@ -1,13 +1,22 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from typing import Optional
+import sys, os, random
 
-class ResetRequest(BaseModel):
-    task_name: Optional[str] = "medium"
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from env import StudyEnvironment
+from tasks import tasks
+
+app = FastAPI()
 
 @app.post("/reset")
-def reset_post(body: Optional[ResetRequest] = None):
-    task = body.task_name if body else "medium"
+async def reset_post(request: Request):
+    try:
+        body = await request.json()
+        task = body.get("task_name", "medium")
+    except:
+        task = "medium"
     if task not in tasks:
         task = "medium"
     env = StudyEnvironment(task)
@@ -17,8 +26,6 @@ def reset_post(body: Optional[ResetRequest] = None):
 def reset_get():
     env = StudyEnvironment("medium")
     return env.reset()
-
-
 
 
 # from fastapi import FastAPI
